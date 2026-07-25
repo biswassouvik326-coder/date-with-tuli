@@ -1,3 +1,8 @@
+Here is the updated code with your phone number (`919641624978`) hardcoded into the WhatsApp redirect function!
+
+When Tuli fills out the date form and hits **Lock It In!**, the celebration balloons and sound will play, and then it will automatically open WhatsApp with a pre-formatted message sent directly to your chat:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -452,7 +457,17 @@
       // Trigger Celebration Sound and Balloons
       playHooraySound();
       createBalloons();
+
+      // Send WhatsApp Message directly to 919641624978
+      const myPhoneNumber = "919641624978";
+      const message = `Hey! I locked in our date details! 💖%0A%0A📅 Date: ${date}%0A⏰ Time: ${time}%0A📍 Place: ${place}%0A🛵 Ride: ${ride}`;
+      
+      setTimeout(() => {
+        window.open(`https://wa.me/${myPhoneNumber}?text=${message}`, '_blank');
+      }, 1500);
     }
   </script>
 </body>
 </html>
+
+```
