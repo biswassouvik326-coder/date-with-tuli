@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuli, go out with me? 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 20px;
+      background: linear-gradient(-45deg, #ff758c, #ff7eb3, #ff4e50, #f9d423);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      position: relative;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Ambient Background Floating Hearts */
+    .bg-heart {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 24px;
+      user-select: none;
+      pointer-events: none;
+      animation: floatBgHeart 8s linear infinite;
+    }
+
+    @keyframes floatBgHeart {
+      0% { transform: translateY(105vh) scale(0.5) rotate(0deg); opacity: 0; }
+      20% { opacity: 0.8; }
+      100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+    }
+
+    /* Glassmorphism Card Style */
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      padding: 35px 25px;
+      border-radius: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 
+                  0 0 50px rgba(255, 105, 180, 0.2);
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+      position: relative;
+      z-index: 10;
+      animation: cardAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes cardAppear {
+      from { opacity: 0; transform: scale(0.8) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .emoji {
+      font-size: 55px;
+      margin-bottom: 10px;
+      display: inline-block;
+      animation: pulseEmoji 2s infinite;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+    }
+
+    @keyframes pulseEmoji {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    h1 {
+      color: #2d3436;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, #ff4e50, #d63384);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p {
+      color: #636e72;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-top: 25px;
+      min-height: 50px;
+      position: relative;
+    }
+
+    button {
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      outline: none;
+    }
+
+    .yes-btn, .submit-btn {
+      background: linear-gradient(135deg, #ff4e50 0%, #f9d423 100%);
+      color: white;
+      box-shadow: 0 8px 20px rgba(255, 78, 80, 0.35);
+    }
+
+    .yes-btn:hover, .submit-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 25px rgba(255, 78, 80, 0.5);
+    }
+
+    .yes-btn:active, .submit-btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .no-btn {
+      background: #e9ecef;
+      color: #495057;
+      position: absolute;
+      right: 20px; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: top 0.2s ease, left 0.2s ease, background-color 0.2s;
+    }
+
+    .no-btn:hover {
+      background-color: #dee2e6;
+    }
+
+    /* Form Styles */
+    .details-screen, .success-screen {
+      display: none;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #495057;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e9ecef;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 14px;
+      font-size: 15px;
+      color: #2d3436;
+      outline: none;
+      transition: all 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper::after {
+      content: '▼';
+      font-size: 12px;
+      color: #ff4e50;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: #ff4e50;
+      box-shadow: 0 0 0 4px rgba(255, 78, 80, 0.15);
+      background: #ffffff;
+    }
+
+    .summary-box {
+      background: linear-gradient(135deg, rgba(255,240,243,0.8), rgba(255,228,230,0.8));
+      border: 1px solid rgba(255, 182, 193, 0.5);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: left;
+      font-size: 15px;
+      color: #2d3436;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .summary-box p {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .summary-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .summary-box span {
+      font-weight: 600;
+      color: #d63384;
+    }
+
+    /* Balloon Animation Styles */
+    .balloon-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+      display: none;
+    }
+
+    .balloon {
+      position: absolute;
+      bottom: -120px;
+      width: 55px;
+      height: 70px;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      animation: floatUp 6s ease-in infinite;
+      box-shadow: inset -5px -5px 10px rgba(0,0,0,0.15);
+    }
+
+    .balloon::after {
+      content: "";
+      position: absolute;
+      bottom: -12px;
+      left: 26px;
+      width: 2px;
+      height: 18px;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-125vh) rotate(25deg);
+        opacity: 0.9;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Floating Background Hearts -->
+  <div id="bgHeartsContainer"></div>
+
+  <!-- Balloon Container -->
+  <div class="balloon-container" id="balloonContainer"></div>
+
+  <!-- 1. Proposal Card -->
+  <div class="card" id="proposalCard">
+    <div class="emoji">🥺👉👈</div>
+    <h1>Hey Tuli, will you go out on a date with me?</h1>
+    <p>I promise great food, lots of laughs, and wonderful memories!</p>
+    <div class="btn-container">
+      <button class="yes-btn" onclick="goToDetails()">Yes!</button>
+      <button class="no-btn" id="noBtn">No</button>
+    </div>
+  </div>
+
+  <!-- 2. Date/Time/Place Form Window -->
+  <div class="card details-screen" id="detailsCard">
+    <div class="emoji">🗓️✨</div>
+    <h1>Awesome, Tuli! Let's Plan It</h1>
+    <p style="margin-bottom: 20px;">Pick a date, time, spot, and ride preference!</p>
+    
+    <form id="dateForm" onsubmit="submitForm(event)">
+      <div class="form-group">
+        <label for="dateInput">📅 Date</label>
+        <input type="date" id="dateInput" required>
+      </div>
+
+      <div class="form-group">
+        <label for="timeInput">⏰ Time</label>
+        <input type="time" id="timeInput" required>
+      </div>
+
+      <div class="form-group">
+        <label for="placeInput">📍 Location / Place</label>
+        <input type="text" id="placeInput" placeholder="e.g. Favorite Coffee Shop, Park..." required>
+      </div>
+
+      <div class="form-group">
+        <label for="rideInput">🛵 How are we travelling?</label>
+        <div class="select-wrapper">
+          <select id="rideInput" required>
+            <option value="" disabled selected>Select a ride option...</option>
+            <option value="On my bike 🏍️">On my bike 🏍️</option>
+            <option value="On your scooty 🛵">On your scooty 🛵</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" style="width: 100%; margin-top: 10px;">Lock It In! 🔒</button>
+    </form>
+  </div>
+
+  <!-- 3. Final Confirmation Screen -->
+  <div class="card success-screen" id="successCard">
+    <div class="emoji">🎉🎈💖</div>
+    <h1>Yay! It's a Date, Tuli!</h1>
+    <p>I can't wait to spend time with you!</p>
+    
+    <div class="summary-box">
+      <p>📅 <strong>Date:</strong> <span id="displayDate"></span></p>
+      <p>⏰ <strong>Time:</strong> <span id="displayTime"></span></p>
+      <p>📍 <strong>Place:</strong> <span id="displayPlace"></span></p>
+      <p>🛵 <strong>Ride:</strong> <span id="displayRide"></span></p>
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const proposalCard = document.getElementById('proposalCard');
+    const detailsCard = document.getElementById('detailsCard');
+    const successCard = document.getElementById('successCard');
+    const balloonContainer = document.getElementById('balloonContainer');
+    const bgHeartsContainer = document.getElementById('bgHeartsContainer');
+
+    // Create ambient background hearts
+    function createBgHearts() {
+      const hearts = ['💖', '🌸', '✨', '💕', '💗'];
+      for (let i = 0; i < 15; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'bg-heart';
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = `${Math.random() * 100}vw`;
+        heart.style.animationDuration = `${6 + Math.random() * 6}s`;
+        heart.style.animationDelay = `${Math.random() * 5}s`;
+        bgHeartsContainer.appendChild(heart);
+      }
+    }
+    createBgHearts();
+
+    // Runaway "No" button logic
+    function moveButton() {
+      noBtn.style.position = 'fixed';
+      const padding = 20;
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+      const randomX = Math.floor(Math.random() * (maxX - padding)) + padding;
+      const randomY = Math.floor(Math.random() * (maxY - padding)) + padding;
+
+      noBtn.style.left = `${randomX}px`;
+      noBtn.style.top = `${randomY}px`;
+    }
+
+    noBtn.addEventListener('mouseover', moveButton);
+    noBtn.addEventListener('touchstart', moveButton);
+
+    function goToDetails() {
+      proposalCard.style.display = 'none';
+      noBtn.style.display = 'none';
+      detailsCard.style.display = 'block';
+    }
+
+    // Play celebration sound via Web Audio API
+    function playHooraySound() {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+      
+      notes.forEach((freq, index) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + index * 0.08);
+        
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime + index * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + index * 0.08 + 0.6);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.start(audioCtx.currentTime + index * 0.08);
+        osc.stop(audioCtx.currentTime + index * 0.08 + 0.6);
+      });
+    }
+
+    // Create floating celebration balloons
+    function createBalloons() {
+      balloonContainer.style.display = 'block';
+      const colors = ['#ff4e50', '#ff7eb3', '#f9d423', '#70a1ff', '#eccc68', '#2ed573', '#a55eea'];
+      
+      for (let i = 0; i < 35; i++) {
+        const balloon = document.createElement('div');
+        balloon.className = 'balloon';
+        balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        balloon.style.left = `${Math.random() * 100}vw`;
+        balloon.style.animationDuration = `${4 + Math.random() * 4}s`;
+        balloon.style.animationDelay = `${Math.random() * 2}s`;
+        balloonContainer.appendChild(balloon);
+      }
+    }
+
+    // Submit form handler
+    function submitForm(event) {
+      event.preventDefault();
+
+      const date = document.getElementById('dateInput').value;
+      const time = document.getElementById('timeInput').value;
+      const place = document.getElementById('placeInput').value;
+      const ride = document.getElementById('rideInput').value;
+
+      document.getElementById('displayDate').textContent = date;
+      document.getElementById('displayTime').textContent = time;
+      document.getElementById('displayPlace').textContent = place;
+      document.getElementById('displayRide').textContent = ride;
+
+      detailsCard.style.display = 'none';
+      successCard.style.display = 'block';
+
+      // Trigger Celebration Sound and Balloons
+      playHooraySound();
+      createBalloons();
+    }
+  </script>
+</body>
+</html>
